@@ -1,0 +1,11 @@
+{
+  "name": "checkers",
+  "version": "1.0.0",
+  "description": "toy checkers app",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "matt nelson",
+  "license": "ISC"
+}
