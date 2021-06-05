@@ -107,12 +107,12 @@ describe("piece movement", () => {
 
         const piece: Piece = {
             type: "standard",
-            color: Color.Red,
+            color: Color.Black,
             position: moveStart,
         };
         const capturedPiece: Piece = {
             type: "standard",
-            color: Color.Red,
+            color: Color.Black,
             position: [2, 2],
         };
 
@@ -124,5 +124,44 @@ describe("piece movement", () => {
         expect(attempt.error).toEqual(
             "Illegal move: Cannot capture your own piece"
         );
+    });
+
+    it("a standard piece should not be able to move backward toward its home row", () => {
+        const moveStart: Position = [3, 3];
+        const illegalMoveEnd: Position = [2, 2];
+
+        const move: Move = [moveStart, illegalMoveEnd];
+
+        const piece: Piece = {
+            type: "standard",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const boardStart: Board = [piece];
+
+        const attempt = attemptMove(boardStart, move) as AttemptFailure;
+
+        expect(attempt.isSuccessful).toEqual(false);
+        expect(attempt.error).toEqual("Illegal move");
+    });
+
+    it("a king should be able to move backward toward its home row", () => {
+        const moveStart: Position = [3, 3];
+        const illegalMoveEnd: Position = [2, 2];
+
+        const move: Move = [moveStart, illegalMoveEnd];
+
+        const piece: Piece = {
+            type: "king",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const boardStart: Board = [piece];
+
+        const attempt = attemptMove(boardStart, move) as AttemptFailure;
+
+        expect(attempt.isSuccessful).toEqual(true);
     });
 });

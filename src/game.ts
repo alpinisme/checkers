@@ -81,12 +81,19 @@ function removePieceFromBoard(board: Piece[], pieceToRemove: Piece) {
     return [...board.slice(0, index), ...board.slice(index + 1)];
 }
 
-function determineMoveType(start: Position, end: Position): MoveType {
-    const vDistance = Math.abs(end[0] - start[0]);
+function determineMoveType(move: Move, piece: Piece): MoveType {
+    const [start, end] = move;
+    const vOffset = end[0] - start[0];
+    const vDistance = Math.abs(vOffset);
     const hDistance = Math.abs(end[1] - start[1]);
     const isDiagonal = hDistance / vDistance == 1;
+    const isBackwards = piece.color == Color.Black ? vOffset < 0 : vOffset > 0;
 
     if (!isDiagonal) {
+        return "illegal";
+    }
+
+    if (isBackwards && piece.type != "king") {
         return "illegal";
     }
 
@@ -137,7 +144,7 @@ export function attemptMove(board: Board, move: Move): AttemptResult {
         );
     }
 
-    const moveType = determineMoveType(start, end);
+    const moveType = determineMoveType(move, activePiece);
 
     switch (moveType) {
         case "illegal":
