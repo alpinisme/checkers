@@ -54,7 +54,7 @@ function fail(message: string): AttemptFailure {
 }
 
 function movePiece(
-    board: Piece[],
+    board: Board,
     activePiece: Piece,
     position: Position
 ): Board {
