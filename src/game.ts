@@ -137,11 +137,16 @@ function attemptCapture(
 export function attemptMove(board: Board, move: Move): AttemptResult {
     const [start, end] = move;
     const activePiece = board.find((piece) => piece.position == start);
+    const obstructingPiece = board.find((piece) => piece.position == end);
 
     if (activePiece == undefined) {
         return fail(
             "Invalid start for move: piece does not exist in that location"
         );
+    }
+
+    if (obstructingPiece) {
+        return fail("Illegal move: Piece in the way");
     }
 
     const moveType = determineMoveType(move, activePiece);

@@ -164,4 +164,29 @@ describe("piece movement", () => {
 
         expect(attempt.isSuccessful).toEqual(true);
     });
+
+    it("a piece should only be able to move one space when not capturing", () => {
+        const moveStart: Position = [1, 1];
+        const illegalMoveEnd: Position = [2, 2];
+
+        const move: Move = [moveStart, illegalMoveEnd];
+
+        const piece: Piece = {
+            type: "standard",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const obstructingPiece = {
+            ...piece,
+            position: illegalMoveEnd,
+        };
+
+        const boardStart: Board = [piece, obstructingPiece];
+
+        const attempt = attemptMove(boardStart, move) as AttemptFailure;
+
+        expect(attempt.isSuccessful).toEqual(false);
+        expect(attempt.error).toEqual("Illegal move: Piece in the way");
+    });
 });
