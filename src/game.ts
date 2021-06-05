@@ -2,9 +2,14 @@ export type Position = [number, number];
 
 export type Move = [Position, Position];
 
+export enum Color {
+    Black,
+    Red,
+}
+
 export interface Piece {
     type: "standard" | "king";
-    color: "black" | "red";
+    color: Color;
     position: Position;
 }
 
@@ -21,6 +26,8 @@ export type AttemptFailure = {
 };
 
 export type AttemptResult = AttemptSuccess | AttemptFailure;
+
+type MoveType = "standard" | "capture" | "illegal";
 
 /*
     Example board layout:
@@ -64,6 +71,61 @@ function movePiece(
     return [...board.slice(0, index), newPiece, ...board.slice(index + 1)];
 }
 
+function removePieceFromBoard(board: Piece[], pieceToRemove: Piece) {
+    const index = board.findIndex((piece) => pieceToRemove == piece);
+    if (index == -1) {
+        throw new Error(
+            "Attempting to remove a piece that doesn't exist on the board"
+        );
+    }
+    return [...board.slice(0, index), ...board.slice(index + 1)];
+}
+
+function determineMoveType(start: Position, end: Position): MoveType {
+    const vDistance = Math.abs(end[0] - start[0]);
+    const hDistance = Math.abs(end[1] - start[1]);
+    const isDiagonal = hDistance / vDistance == 1;
+
+    if (!isDiagonal) {
+        return "illegal";
+    }
+
+    switch (vDistance) {
+        case 1:
+            return "standard";
+
+        case 2:
+            return "capture";
+
+        default:
+            return "illegal";
+    }
+}
+
+function attemptCapture(
+    board: Board,
+    move: Move,
+    activeColor: Color
+): AttemptResult {
+    const [start, end] = move;
+    const offsetY = end[0] - start[0];
+    const offsetX = end[1] - start[1];
+    const capturedY = offsetY > 0 ? start[0] + 1 : start[0] - 1;
+    const capturedX = offsetX > 0 ? start[1] + 1 : start[1] - 1;
+    const capturedPiece = board.find(
+        (piece) =>
+            piece.position[0] == capturedY && piece.position[1] == capturedX
+    );
+
+    if (capturedPiece == undefined) {
+        return fail("Illegal move: No piece exists to capture");
+    }
+    if (capturedPiece.color == activeColor) {
+        return fail("Illegal move: Cannot capture your own piece");
+    }
+    return succeed(removePieceFromBoard(board, capturedPiece));
+}
+
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
 export function attemptMove(board: Board, move: Move): AttemptResult {
     const [start, end] = move;
@@ -75,7 +137,19 @@ export function attemptMove(board: Board, move: Move): AttemptResult {
         );
     }
 
-    const resultingBoard = movePiece(board, activePiece, end);
+    const moveType = determineMoveType(start, end);
 
-    return succeed(resultingBoard);
+    switch (moveType) {
+        case "illegal":
+            return fail("Illegal move");
+
+        case "capture":
+            return attemptCapture(board, move, activePiece.color);
+
+        case "standard":
+            return succeed(movePiece(board, activePiece, end));
+
+        default:
+            throw new Error("Unknown case for moveType: " + moveType);
+    }
 }
