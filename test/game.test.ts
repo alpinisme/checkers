@@ -77,7 +77,7 @@ describe("piece movement", () => {
         expect(attempt.result.includes(capturedPiece)).toEqual(false);
     });
 
-    it("a piece should only be able to move once space when not capturing", () => {
+    it("a piece should only be able to move one space when not capturing", () => {
         const moveStart: Position = [1, 1];
         const illegalMoveEnd: Position = [3, 3];
 
