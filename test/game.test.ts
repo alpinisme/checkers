@@ -1,4 +1,13 @@
-import { attemptMove, Board, Move, Piece, Position } from "../src/game";
+import { notDeepEqual } from "assert";
+import {
+    AttemptFailure,
+    attemptMove,
+    AttemptSuccess,
+    Board,
+    Move,
+    Piece,
+    Position,
+} from "../src/game";
 
 describe("piece movement", () => {
     it("a piece should be able to move", () => {
@@ -16,7 +25,10 @@ describe("piece movement", () => {
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
-        expect(attemptMove(boardStart, move)).toStrictEqual(boardEnd);
-        expect(attemptMove(boardStart, move)).not.toStrictEqual(boardStart);
+        const attempt = attemptMove(boardStart, move) as AttemptSuccess;
+
+        expect(attempt.isSuccessful).toEqual(true);
+        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.result).not.toStrictEqual(boardStart);
     });
 });
