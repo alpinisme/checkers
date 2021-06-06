@@ -308,11 +308,10 @@ describe("piece movement", () => {
         };
 
         const boardStart: Board = [capturedPiece1, piece];
-        const boardEnd: Board = [{ ...piece, position: position3 }];
 
         const attempt = takeTurn(boardStart, turn) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
-        expect(attempt.error).toBe("boardEnd");
+        expect(attempt.error).toBe("Illegal move");
     });
 });
