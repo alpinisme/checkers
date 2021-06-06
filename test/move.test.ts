@@ -1,12 +1,12 @@
 import {
     AttemptFailure,
-    takeTurn,
     AttemptSuccess,
     Board,
     Color,
     Move,
     Piece,
     Position,
+    takeTurn,
 } from "../src/move";
 
 describe("piece movement", () => {
@@ -27,9 +27,9 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
-        expect(attempt.isSuccessful).toEqual(true);
-        expect(attempt.result).toStrictEqual(boardEnd);
-        expect(attempt.result).not.toStrictEqual(boardStart);
+        expect(attempt.isSuccessful).toBe(true);
+        expect(attempt.result).toEqual(boardEnd);
+        expect(attempt.result).not.toEqual(boardStart);
     });
 
     it("a piece should only be able to move diagonally", () => {
@@ -48,8 +48,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(false);
-        expect(attempt.error).toEqual("Illegal move");
+        expect(attempt.isSuccessful).toBe(false);
+        expect(attempt.error).toBe("Illegal move");
     });
 
     it("a piece should be able to capture another piece", () => {
@@ -74,9 +74,9 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
-        expect(attempt.isSuccessful).toEqual(true);
-        expect(attempt.result.includes(capturedPiece)).toEqual(false);
-        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.isSuccessful).toBe(true);
+        expect(attempt.result.includes(capturedPiece)).toBe(false);
+        expect(attempt.result).toEqual(boardEnd);
     });
 
     it("a piece should only be able to move one space when not capturing", () => {
@@ -95,10 +95,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(false);
-        expect(attempt.error).toEqual(
-            "Illegal move: No piece exists to capture"
-        );
+        expect(attempt.isSuccessful).toBe(false);
+        expect(attempt.error).toBe("Illegal move: No piece exists to capture");
     });
 
     it("a piece should not be able to capture another piece of its own color", () => {
@@ -122,8 +120,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(false);
-        expect(attempt.error).toEqual(
+        expect(attempt.isSuccessful).toBe(false);
+        expect(attempt.error).toBe(
             "Illegal move: Cannot capture your own piece"
         );
     });
@@ -144,8 +142,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(false);
-        expect(attempt.error).toEqual("Illegal move");
+        expect(attempt.isSuccessful).toBe(false);
+        expect(attempt.error).toBe("Illegal move");
     });
 
     it("a king should be able to move backward toward its home row", () => {
@@ -164,7 +162,7 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(true);
+        expect(attempt.isSuccessful).toBe(true);
     });
 
     it("a piece should only be able to move one space when not capturing", () => {
@@ -188,8 +186,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptFailure;
 
-        expect(attempt.isSuccessful).toEqual(false);
-        expect(attempt.error).toEqual("Illegal move: Piece in the way");
+        expect(attempt.isSuccessful).toBe(false);
+        expect(attempt.error).toBe("Illegal move: Piece in the way");
     });
 
     it("a standard piece should be promoted to king when it reaches opponent's home row", () => {
@@ -209,8 +207,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
-        expect(attempt.isSuccessful).toEqual(true);
-        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.isSuccessful).toBe(true);
+        expect(attempt.result).toEqual(boardEnd);
     });
 
     it("a standard piece should not be promoted to king outside opponent's home row", () => {
@@ -230,8 +228,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
-        expect(attempt.isSuccessful).toEqual(true);
-        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.isSuccessful).toBe(true);
+        expect(attempt.result).toEqual(boardEnd);
     });
 
     it("a king should be able to move backward toward its home row", () => {
@@ -251,8 +249,8 @@ describe("piece movement", () => {
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
-        expect(attempt.isSuccessful).toEqual(true);
-        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.isSuccessful).toBe(true);
+        expect(attempt.result).toEqual(boardEnd);
     });
 
     it("a piece should be able to execute multiple captures in a single turn", () => {
@@ -285,7 +283,7 @@ describe("piece movement", () => {
         const attempt = takeTurn(boardStart, turn) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
-        expect(attempt.result).toStrictEqual(boardEnd);
+        expect(attempt.result).toEqual(boardEnd);
     });
 
     it("a piece should be not able to execute a regular move after a capture in a single turn", () => {

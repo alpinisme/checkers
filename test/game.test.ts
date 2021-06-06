@@ -12,9 +12,9 @@ describe("game play", () => {
         const blackVictory = [blackPiece];
         const redVictory = [redPiece];
         const liveGame = [blackPiece, redPiece];
-        expect(isGameOver(blackVictory)).toEqual(true);
-        expect(isGameOver(redVictory)).toEqual(true);
-        expect(isGameOver(liveGame)).toEqual(false);
+        expect(isGameOver(blackVictory)).toBe(true);
+        expect(isGameOver(redVictory)).toBe(true);
+        expect(isGameOver(liveGame)).toBe(false);
     });
 
     test("a turn can include");
