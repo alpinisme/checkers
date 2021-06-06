@@ -147,14 +147,22 @@ function attemptCapture(
 /* core module export */
 
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
-export function attemptMove(board: Board, move: Move): AttemptResult {
-    const [start, end] = move;
+export function takeTurn(board: Board, turn: Position[]): AttemptResult {
+    const [start, next, ...rest] = turn;
+
+    // all moves complete, turn is over
+    if (next == undefined) {
+        return succeed(board);
+    }
+
+    // current move
+    const move: Move = [start, next];
     const activePiece = board.find((piece) => piece.position == start);
-    const obstructingPiece = board.find((piece) => piece.position == end);
+    const obstructingPiece = board.find((piece) => piece.position == next);
 
     if (activePiece == undefined) {
         return fail(
-            "Invalid start for move: piece does not exist in that location"
+            "Invalid start for move: Piece does not exist in that location"
         );
     }
 
@@ -168,11 +176,15 @@ export function attemptMove(board: Board, move: Move): AttemptResult {
         case "illegal":
             return fail("Illegal move");
 
+        // BUG: allows player to capture and then make a regular move
         case "capture":
-            return attemptCapture(board, move, activePiece);
+            const captureAttempt = attemptCapture(board, move, activePiece);
+            return captureAttempt.isSuccessful
+                ? takeTurn(captureAttempt.result, [next, ...rest]) // multipe captures allowed, so try next move
+                : captureAttempt; // capture failed, return the error
 
         case "standard":
-            return succeed(movePiece(board, activePiece, end));
+            return succeed(movePiece(board, activePiece, next));
 
         default:
             throw new Error("Unknown case for moveType: " + moveType);
