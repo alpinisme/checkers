@@ -1,19 +1,68 @@
-import { isGameOver } from "../src/game";
+import { Game, play, TurnRequest } from "../src/game";
 import { Color, Piece } from "../src/move";
 
+const blackPiece: Piece = {
+    type: "king",
+    position: [1, 1],
+    color: Color.Black,
+};
+
+const redPiece: Piece = {
+    type: "king",
+    position: [3, 3],
+    color: Color.Red,
+};
+
+const validRequest: TurnRequest = {
+    color: Color.Black,
+    board: [blackPiece, redPiece],
+    turn: [blackPiece.position, [2, 2]],
+};
+
+const storedGame: Game = {
+    board: [blackPiece, redPiece],
+    turn: Color.Black,
+};
+
 describe("game play", () => {
-    test("game should be over iff only one player has pieces on board", () => {
-        const blackPiece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: [1, 1],
+    test("a player should not be able to request move on board that doesn't match stored game", () => {
+        const invalidRequest: TurnRequest = {
+            ...validRequest,
+            board: [blackPiece],
         };
-        const redPiece = { ...blackPiece, color: Color.Red };
-        const blackVictory = [blackPiece];
-        const redVictory = [redPiece];
-        const liveGame = [blackPiece, redPiece];
-        expect(isGameOver(blackVictory)).toBe(true);
-        expect(isGameOver(redVictory)).toBe(true);
-        expect(isGameOver(liveGame)).toBe(false);
+        expect(() => play(storedGame, invalidRequest)).toThrow(
+            "Mismatched Boards"
+        );
+    });
+
+    test("a player should not be able to request move on board of completed game", () => {
+        const board = [blackPiece];
+        const invalidRequest: TurnRequest = {
+            ...validRequest,
+            board,
+        };
+        const game = {
+            ...storedGame,
+            board,
+        };
+        expect(() => play(game, invalidRequest)).toThrow("Game Over");
+    });
+
+    test("a player should not be able to request move when not that player's turn", () => {
+        const invalidRequest: TurnRequest = {
+            ...validRequest,
+            color: Color.Red,
+        };
+        expect(() => play(storedGame, invalidRequest)).toThrow(
+            "Not Player's Turn"
+        );
+    });
+
+    test("a player should not be able to request move off board", () => {
+        const invalidRequest: TurnRequest = {
+            ...validRequest,
+            turn: [blackPiece.position, [1, 10]],
+        };
+        expect(() => play(storedGame, invalidRequest)).toThrow("Offboard Move");
     });
 });
