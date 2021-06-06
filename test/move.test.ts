@@ -70,11 +70,13 @@ describe("piece movement", () => {
         };
 
         const boardStart: Board = [piece, capturedPiece];
+        const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
         const attempt = attemptMove(boardStart, move) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toEqual(true);
         expect(attempt.result.includes(capturedPiece)).toEqual(false);
+        expect(attempt.result).toStrictEqual(boardEnd);
     });
 
     it("a piece should only be able to move one space when not capturing", () => {

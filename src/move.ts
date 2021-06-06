@@ -112,7 +112,7 @@ function determineMoveType(move: Move, piece: Piece): MoveType {
 function attemptCapture(
     board: Board,
     move: Move,
-    activeColor: Color
+    activePiece: Piece
 ): AttemptResult {
     const [start, end] = move;
     const offsetY = end[0] - start[0];
@@ -127,10 +127,15 @@ function attemptCapture(
     if (capturedPiece == undefined) {
         return fail("Illegal move: No piece exists to capture");
     }
-    if (capturedPiece.color == activeColor) {
+
+    if (capturedPiece.color == activePiece.color) {
         return fail("Illegal move: Cannot capture your own piece");
     }
-    return succeed(removePieceFromBoard(board, capturedPiece));
+
+    const boardAfterCapture = removePieceFromBoard(board, capturedPiece);
+    const boardAfterMove = movePiece(boardAfterCapture, activePiece, end);
+
+    return succeed(boardAfterMove);
 }
 
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
@@ -156,7 +161,7 @@ export function attemptMove(board: Board, move: Move): AttemptResult {
             return fail("Illegal move");
 
         case "capture":
-            return attemptCapture(board, move, activePiece.color);
+            return attemptCapture(board, move, activePiece);
 
         case "standard":
             return succeed(movePiece(board, activePiece, end));
