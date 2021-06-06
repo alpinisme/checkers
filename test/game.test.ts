@@ -16,6 +16,4 @@ describe("game play", () => {
         expect(isGameOver(redVictory)).toBe(true);
         expect(isGameOver(liveGame)).toBe(false);
     });
-
-    test("a turn can include");
 });
