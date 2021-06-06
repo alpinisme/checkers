@@ -310,6 +310,8 @@ describe("piece movement", () => {
         const attempt = takeTurn(boardStart, turn) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
-        expect(attempt.error).toBe("Illegal move");
+        expect(attempt.error).toBe(
+            "Illegal move: Multiple moves are only allowed in a turn if all are captures"
+        );
     });
 });

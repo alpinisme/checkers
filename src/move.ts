@@ -190,7 +190,9 @@ export function takeTurn(
         case "standard":
             return firstMove
                 ? succeed(movePiece(board, activePiece, next))
-                : fail("Illegal move");
+                : fail(
+                      "Illegal move: Multiple moves are only allowed in a turn if all are captures"
+                  );
 
         default:
             throw new Error("Unknown case for moveType: " + moveType);
