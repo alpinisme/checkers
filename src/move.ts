@@ -53,6 +53,12 @@ function fail(message: string): AttemptFailure {
     };
 }
 
+function shouldPromote(piece: Piece) {
+    if (piece.type == "king") return false;
+    const row = piece.position[0];
+    return piece.color == Color.Black ? row == 7 : row == 0;
+}
+
 function movePiece(
     board: Board,
     activePiece: Piece,
@@ -67,6 +73,10 @@ function movePiece(
     }
 
     const newPiece = { ...activePiece, position };
+
+    if (shouldPromote(newPiece)) {
+        newPiece.type = "king";
+    }
 
     return [...board.slice(0, index), newPiece, ...board.slice(index + 1)];
 }

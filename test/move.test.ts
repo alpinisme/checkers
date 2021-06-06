@@ -191,4 +191,67 @@ describe("piece movement", () => {
         expect(attempt.isSuccessful).toEqual(false);
         expect(attempt.error).toEqual("Illegal move: Piece in the way");
     });
+
+    it("a standard piece should be promoted to king when it reaches opponent's home row", () => {
+        const moveStart: Position = [6, 6];
+        const moveEnd: Position = [7, 7];
+
+        const move: Move = [moveStart, moveEnd];
+
+        const piece: Piece = {
+            type: "standard",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const boardStart: Board = [piece];
+        const boardEnd: Board = [{ ...piece, position: moveEnd, type: "king" }];
+
+        const attempt = attemptMove(boardStart, move) as AttemptSuccess;
+
+        expect(attempt.isSuccessful).toEqual(true);
+        expect(attempt.result).toStrictEqual(boardEnd);
+    });
+
+    it("a standard piece should not be promoted to king outside opponent's home row", () => {
+        const moveStart: Position = [1, 1];
+        const moveEnd: Position = [2, 2];
+
+        const move: Move = [moveStart, moveEnd];
+
+        const piece: Piece = {
+            type: "standard",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const boardStart: Board = [piece];
+        const boardEnd: Board = [{ ...piece, position: moveEnd }];
+
+        const attempt = attemptMove(boardStart, move) as AttemptSuccess;
+
+        expect(attempt.isSuccessful).toEqual(true);
+        expect(attempt.result).toStrictEqual(boardEnd);
+    });
+
+    it("a king should be able to move backward toward its home row", () => {
+        const moveStart: Position = [3, 3];
+        const moveEnd: Position = [2, 2];
+
+        const move: Move = [moveStart, moveEnd];
+
+        const piece: Piece = {
+            type: "king",
+            color: Color.Black,
+            position: moveStart,
+        };
+
+        const boardStart: Board = [piece];
+        const boardEnd: Board = [{ ...piece, position: moveEnd }];
+
+        const attempt = attemptMove(boardStart, move) as AttemptSuccess;
+
+        expect(attempt.isSuccessful).toEqual(true);
+        expect(attempt.result).toStrictEqual(boardEnd);
+    });
 });
