@@ -7,7 +7,7 @@ import {
     Move,
     Piece,
     Position,
-} from "../src/game";
+} from "../src/move";
 
 describe("piece movement", () => {
     it("a piece should be able to move", () => {
