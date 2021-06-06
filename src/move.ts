@@ -1,32 +1,26 @@
+/* type declarations */
+
 export type Position = [number, number];
-
 export type Move = [Position, Position];
-
 export enum Color {
     Black,
     Red,
 }
-
 export interface Piece {
     type: "standard" | "king";
     color: Color;
     position: Position;
 }
-
 export type Board = Piece[];
-
 export type AttemptSuccess = {
     isSuccessful: true;
     result: Board;
 };
-
 export type AttemptFailure = {
     isSuccessful: false;
     error: string;
 };
-
 export type AttemptResult = AttemptSuccess | AttemptFailure;
-
 type MoveType = "standard" | "capture" | "illegal";
 
 /*
@@ -38,6 +32,8 @@ type MoveType = "standard" | "capture" | "illegal";
 
     Black starts on the 0 side
 */
+
+/* helper functions */
 
 function succeed(board: Board): AttemptSuccess {
     return {
@@ -147,6 +143,8 @@ function attemptCapture(
 
     return succeed(boardAfterMove);
 }
+
+/* core module export */
 
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
 export function attemptMove(board: Board, move: Move): AttemptResult {
