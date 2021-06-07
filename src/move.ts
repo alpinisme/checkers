@@ -1,17 +1,9 @@
+import { Board, Color, Piece, PieceType, Position } from "./board";
+
 /* type declarations */
 
-export type Position = [number, number];
 export type Move = [Position, Position];
-export enum Color {
-    Black,
-    Red,
-}
-export interface Piece {
-    type: "standard" | "king";
-    color: Color;
-    position: Position;
-}
-export type Board = Piece[];
+
 export type AttemptSuccess = {
     isSuccessful: true;
     result: Board;
@@ -50,7 +42,7 @@ function fail(message: string): AttemptFailure {
 }
 
 function shouldPromote(piece: Piece) {
-    if (piece.type == "king") return false;
+    if (piece.type == PieceType.King) return false;
     const row = piece.position[0];
     return piece.color == Color.Black ? row == 7 : row == 0;
 }
@@ -71,7 +63,7 @@ function movePiece(
     const newPiece = { ...activePiece, position };
 
     if (shouldPromote(newPiece)) {
-        newPiece.type = "king";
+        newPiece.type = PieceType.King;
     }
 
     return [...board.slice(0, index), newPiece, ...board.slice(index + 1)];
@@ -99,7 +91,7 @@ function determineMoveType(move: Move, piece: Piece): MoveType {
         return "illegal";
     }
 
-    if (isBackwards && piece.type != "king") {
+    if (isBackwards && piece.type != PieceType.King) {
         return "illegal";
     }
 

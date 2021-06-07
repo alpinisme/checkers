@@ -1,17 +1,8 @@
 import { Game, play, TurnRequest } from "../src/game";
-import { Color, Piece } from "../src/move";
+import { Color, makePiece, Piece, PieceType } from "../src/board";
 
-const blackPiece: Piece = {
-    type: "king",
-    position: [1, 1],
-    color: Color.Black,
-};
-
-const redPiece: Piece = {
-    type: "king",
-    position: [3, 3],
-    color: Color.Red,
-};
+const blackPiece: Piece = makePiece(Color.Black, [1, 1], PieceType.King);
+const redPiece: Piece = makePiece(Color.Red, [3, 3], PieceType.King);
 
 const validRequest: TurnRequest = {
     color: Color.Black,

@@ -1,4 +1,5 @@
-import { Board, Color, Position, takeTurn } from "./move";
+import { Board, Color, Position } from "./board";
+import { takeTurn } from "./move";
 import equal from "deep-equal";
 
 /* type declarations */

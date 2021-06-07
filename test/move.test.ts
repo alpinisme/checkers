@@ -1,13 +1,12 @@
+import { AttemptFailure, AttemptSuccess, Move, takeTurn } from "../src/move";
 import {
-    AttemptFailure,
-    AttemptSuccess,
     Board,
     Color,
-    Move,
     Piece,
     Position,
-    takeTurn,
-} from "../src/move";
+    PieceType,
+    makePiece,
+} from "../src/board";
 
 describe("piece movement", () => {
     it("a piece should be able to move", () => {
@@ -16,11 +15,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
@@ -38,11 +33,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, illegalMoveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
 
@@ -58,16 +49,8 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
-        const capturedPiece: Piece = {
-            type: "standard",
-            color: Color.Red,
-            position: [2, 2],
-        };
+        const piece = makePiece(Color.Black, moveStart);
+        const capturedPiece = makePiece(Color.Red, [2, 2]);
 
         const boardStart: Board = [piece, capturedPiece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
@@ -85,11 +68,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, illegalMoveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
 
@@ -105,16 +84,8 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
-        const capturedPiece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: [2, 2],
-        };
+        const piece = makePiece(Color.Black, moveStart);
+        const capturedPiece = makePiece(Color.Black, [2, 2]);
 
         const boardStart: Board = [piece, capturedPiece];
 
@@ -132,11 +103,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, illegalMoveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
 
@@ -152,11 +119,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, illegalMoveEnd];
 
-        const piece: Piece = {
-            type: "king",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart, PieceType.King);
 
         const boardStart: Board = [piece];
 
@@ -171,11 +134,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, illegalMoveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const obstructingPiece = {
             ...piece,
@@ -196,14 +155,12 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
-        const boardEnd: Board = [{ ...piece, position: moveEnd, type: "king" }];
+        const boardEnd: Board = [
+            { ...piece, position: moveEnd, type: PieceType.King },
+        ];
 
         const attempt = takeTurn(boardStart, move) as AttemptSuccess;
 
@@ -217,11 +174,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart);
 
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
@@ -238,11 +191,7 @@ describe("piece movement", () => {
 
         const move: Move = [moveStart, moveEnd];
 
-        const piece: Piece = {
-            type: "king",
-            color: Color.Black,
-            position: moveStart,
-        };
+        const piece = makePiece(Color.Black, moveStart, PieceType.King);
 
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
@@ -262,20 +211,10 @@ describe("piece movement", () => {
 
         const turn = [position1, position2, position3];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: position1,
-        };
-        const capturedPiece1 = {
-            ...piece,
-            color: Color.Red,
-            position: capturePosition1,
-        };
-        const capturedPiece2 = {
-            ...capturedPiece1,
-            position: capturePosition2,
-        };
+        const piece = makePiece(Color.Black, position1);
+
+        const capturedPiece1 = makePiece(Color.Red, capturePosition1);
+        const capturedPiece2 = makePiece(Color.Red, capturePosition2);
 
         const boardStart: Board = [capturedPiece1, piece, capturedPiece2];
         const boardEnd: Board = [{ ...piece, position: position3 }];
@@ -294,16 +233,8 @@ describe("piece movement", () => {
 
         const turn = [position1, position2, position3];
 
-        const piece: Piece = {
-            type: "standard",
-            color: Color.Black,
-            position: position1,
-        };
-        const capturedPiece1 = {
-            ...piece,
-            color: Color.Red,
-            position: capturePosition1,
-        };
+        const piece: Piece = makePiece(Color.Black, position1);
+        const capturedPiece1 = makePiece(Color.Red, capturePosition1);
 
         const boardStart: Board = [capturedPiece1, piece];
 
