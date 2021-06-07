@@ -1,5 +1,5 @@
-import { Game, play, TurnRequest } from "../src/game";
-import { Color, makePiece, Piece, PieceType } from "../src/board";
+import { Game, play, TurnRequest } from "../src/models/game";
+import { Color, makePiece, Piece, PieceType } from "../src/models/board";
 
 const blackPiece: Piece = makePiece(Color.Black, [1, 1], PieceType.King);
 const redPiece: Piece = makePiece(Color.Red, [3, 3], PieceType.King);

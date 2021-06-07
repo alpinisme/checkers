@@ -1,4 +1,4 @@
-import { Color, makeNewBoard } from "../src/board";
+import { Color, makeNewBoard } from "../src/models/board";
 
 describe("Board creation", () => {
     test("A new board has 24 pieces", () => {

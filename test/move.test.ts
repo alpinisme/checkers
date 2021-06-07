@@ -1,4 +1,9 @@
-import { AttemptFailure, AttemptSuccess, Move, takeTurn } from "../src/move";
+import {
+    AttemptFailure,
+    AttemptSuccess,
+    Move,
+    takeTurn,
+} from "../src/models/move";
 import {
     Board,
     Color,
@@ -6,7 +11,7 @@ import {
     Position,
     PieceType,
     makePiece,
-} from "../src/board";
+} from "../src/models/board";
 
 describe("piece movement", () => {
     it("a piece should be able to move", () => {
