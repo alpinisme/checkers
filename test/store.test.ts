@@ -1,14 +1,21 @@
 import gameStore from "../src/store/game";
+import userStore from "../src/store/user";
 import { Color } from "../src/models/board";
+import redis from "../src/store/redis";
 
 jest.mock("ioredis", () => require("ioredis-mock/jest"));
+
+beforeEach(() => redis.flushdb());
 
 describe("Game store", () => {
     test("A game can be saved and retrieved", async () => {
         const player1 = "alpha";
         const player2 = "omega";
         const gameIdPrefix = "game:" + player1 + ":" + player2;
-        gameStore.create(player1, player2, { turn: Color.Black, board: [] });
+        await gameStore.create(player1, player2, {
+            turn: Color.Black,
+            board: [],
+        });
         const ids = await gameStore.allIdsBelongingTo(player1);
         const id = ids[0];
         expect(id.startsWith(gameIdPrefix)).toBe(true);
@@ -18,8 +25,9 @@ describe("Game store", () => {
         const player1 = "alpha";
         const player2 = "omega";
         const game = { turn: Color.Black, board: [] };
-        gameStore.create(player1, player2, game);
+        await gameStore.create(player1, player2, game);
         const initial = await gameStore.allIdsBelongingTo(player1);
+        await new Promise((resolve) => setTimeout(() => resolve(true), 2));
         gameStore.update(player1, initial[0], game);
         const final = await gameStore.allIdsBelongingTo(player1);
         const player2Initial = await gameStore.allIdsBelongingTo(player2);
@@ -42,5 +50,30 @@ describe("Game store", () => {
         await expect(gameStore.get("game:" + ids[0])).rejects.toThrowError(
             "Failed to parse non-string as json"
         );
+    });
+});
+
+describe("User store", () => {
+    test("Password check works", async () => {
+        const username = "Example";
+        const password = "Pass1234";
+        await userStore.create(username, password);
+        const rightPassWorks = userStore.checkPassword(username, password);
+        await expect(rightPassWorks).resolves.toBe(true);
+        const wrongPassWorks = userStore.checkPassword(username, "wrongpass");
+        await expect(wrongPassWorks).resolves.toBe(false);
+    });
+
+    test("Wins and losses can be recorded for a user", async () => {
+        const username = "Example";
+        const password = "Pass1234";
+
+        userStore.create(username, password);
+        userStore.recordLoss(username);
+        userStore.recordWin(username);
+        userStore.recordWin(username);
+        const user = await userStore.get(username);
+        expect(user.wins).toBe(2);
+        expect(user.losses).toBe(1);
     });
 });

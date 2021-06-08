@@ -4,7 +4,6 @@ import { assertType, hasKeys } from "../utils";
 
 export interface User {
     username: string;
-    password: string;
     wins: number;
     losses: number;
 }
@@ -14,7 +13,7 @@ function getKey(username: string) {
 }
 
 function isUser(user: any): user is User {
-    return hasKeys(user, ["username", "password", "wins", "losses"]);
+    return hasKeys(user, ["username", "wins", "losses"]);
 }
 
 async function create(username: string, password: string): Promise<void> {
@@ -31,8 +30,12 @@ async function create(username: string, password: string): Promise<void> {
 
 async function get(username: string): Promise<User> {
     const key = getKey(username);
-    const user = await redis.hgetall(username);
-    user.username = username;
+    const data = await redis.hgetall(key);
+    const user = {
+        username: username,
+        wins: Number(data.wins),
+        losses: Number(data.losses),
+    };
     return assertType(user, isUser);
 }
 
@@ -43,7 +46,14 @@ function recordWin(username: string) {
 
 function recordLoss(username: string) {
     const key = getKey(username);
-    redis.hincrby(key, "lossses", 1);
+    redis.hincrby(key, "losses", 1);
+}
+
+async function checkPassword(username: string, password: string) {
+    const key = getKey(username);
+    const storedPassword = await redis.hget(key, "password");
+    if (!storedPassword) throw new Error();
+    return storedPassword ? bcrypt.compare(password, storedPassword) : false;
 }
 
 export default {
@@ -51,4 +61,5 @@ export default {
     create,
     recordLoss,
     recordWin,
+    checkPassword,
 };
