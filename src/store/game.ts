@@ -1,17 +1,11 @@
 import { Game } from "../models/game";
-import { parseJson } from "../utils";
+import { assertType, parseJson } from "../utils";
 import redis from "./redis";
 
 function isGame(game: any): game is Game {
     if (game?.turn != undefined) return false;
     if (game?.board?.length <= 0) return false;
     return true;
-}
-
-function assertIsGame(game: unknown): Game {
-    if (!isGame(game))
-        throw new Error("Expected game but received something else");
-    return game;
 }
 
 function assignToPlayer(username: string, gameId: string) {
@@ -28,7 +22,7 @@ function create(player1: string, player2: string, game: Game) {
 async function get(gameId: string): Promise<Game> {
     const json = await redis.get("game:" + gameId);
     const game = await parseJson(json);
-    return assertIsGame(game);
+    return assertType(game, isGame);
 }
 
 function update(username: string, gameId: string, game: Game) {

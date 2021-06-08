@@ -40,7 +40,7 @@ describe("Game store", () => {
         const ids = await gameStore.allIdsBelongingTo(player1);
 
         await expect(gameStore.get("game:" + ids[0])).rejects.toThrowError(
-            "Failed to parse undefined as json"
+            "Failed to parse non-string as json"
         );
     });
 });

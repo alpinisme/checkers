@@ -8,8 +8,29 @@ export function replaceItemAtIndex<A>(array: A[], index: number, item: A) {
 }
 
 export function parseJson(json: string | null): unknown {
-    if (json == undefined) {
-        throw new Error("Failed to parse undefined as json");
+    if (typeof json != "string") {
+        throw new TypeError("Failed to parse non-string as json");
     }
     return JSON.parse(json);
+}
+
+export function assertType<A>(
+    value: unknown,
+    guard: (a: unknown) => a is A
+): A {
+    if (!guard(value)) {
+        throw new TypeError(
+            "Failed to assert that value passes type guard " + guard.name
+        );
+    }
+    return value;
+}
+
+export function hasKeys(obj: Object, keyList: string[]) {
+    return keyList.reduce((result, key) => {
+        if (result == false) {
+            return false;
+        }
+        return obj.hasOwnProperty(key);
+    }, true);
 }
