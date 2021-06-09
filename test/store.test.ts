@@ -1,5 +1,6 @@
 import gameStore from "../src/store/game";
 import userStore from "../src/store/user";
+import chatStore, { Message } from "../src/store/chat";
 import { Color } from "../src/models/board";
 import redis from "../src/store/redis";
 
@@ -12,7 +13,7 @@ describe("Game store", () => {
         const player1 = "alpha";
         const player2 = "omega";
         const gameIdPrefix = "game:" + player1 + ":" + player2;
-        await gameStore.create(player1, player2, {
+        gameStore.create(player1, player2, {
             turn: Color.Black,
             board: [],
         });
@@ -25,7 +26,7 @@ describe("Game store", () => {
         const player1 = "alpha";
         const player2 = "omega";
         const game = { turn: Color.Black, board: [] };
-        await gameStore.create(player1, player2, game);
+        gameStore.create(player1, player2, game);
         const initial = await gameStore.allIdsBelongingTo(player1);
         await new Promise((resolve) => setTimeout(() => resolve(true), 2));
         gameStore.update(player1, initial[0], game);
@@ -75,5 +76,37 @@ describe("User store", () => {
         const user = await userStore.get(username);
         expect(user.wins).toBe(2);
         expect(user.losses).toBe(1);
+    });
+});
+
+describe("Chat store", () => {
+    test("Messages can be added and retrieved from a game's chat room", async () => {
+        expect.assertions(1);
+        const gameId = "example:game";
+        const msg: Message = {
+            username: "User",
+            message: "Hello World",
+            timestamp: Date.now(),
+        };
+        await chatStore.addMessage(gameId, msg);
+        await expect(chatStore.getChat(gameId)).resolves.toEqual([msg]);
+    });
+
+    test("Messages are retrieved from a game's chat room in reverse chronological order", async () => {
+        expect.assertions(1);
+        const gameId = "example:game";
+        const msg1: Message = {
+            username: "User",
+            message: "Hello World",
+            timestamp: Date.now(),
+        };
+        const msg2: Message = {
+            username: "World",
+            message: "And hello to you, too",
+            timestamp: Date.now(),
+        };
+        await chatStore.addMessage(gameId, msg1);
+        await chatStore.addMessage(gameId, msg2);
+        await expect(chatStore.getChat(gameId)).resolves.toEqual([msg2, msg1]);
     });
 });
