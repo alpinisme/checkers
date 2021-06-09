@@ -1,10 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 
-interface LoginData {
-    username: string;
-    password: string;
-}
-
 type ValidationErrors = Record<string, string>;
 
 function isNonEmpty(obj: Record<string, string>): boolean {
