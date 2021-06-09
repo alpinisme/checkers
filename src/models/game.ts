@@ -1,4 +1,4 @@
-import { Board, Color, Position } from "./board";
+import { Board, Color, makeNewBoard, Position } from "./board";
 import { takeTurn } from "./move";
 import equal from "deep-equal";
 
@@ -61,4 +61,11 @@ export function play(game: Game, request: TurnRequest) {
     }
 
     return takeTurn(request.board, request.turn);
+}
+
+export function makeNewGame(): Game {
+    return {
+        turn: Color.Black,
+        board: makeNewBoard(),
+    };
 }
