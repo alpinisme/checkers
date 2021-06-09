@@ -16,6 +16,25 @@ export function validateLogin(
     res: Response,
     next: NextFunction
 ): void {
+    const { password, username } = req.body;
+    const errors: ValidationErrors = {};
+    if (password == undefined) {
+        errors.password = "Password required";
+    }
+    if (username == undefined) {
+        errors.username = "Username required";
+    }
+    if (isNonEmpty(errors)) {
+        res.status(400).send({ errors });
+    }
+    next();
+}
+
+export function validateRegistration(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): void {
     const { password, verifyPassword, username } = req.body;
     const errors: ValidationErrors = {};
     if (password == undefined) {

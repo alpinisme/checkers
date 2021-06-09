@@ -17,7 +17,7 @@ function isUser(user: any): user is User {
 }
 
 async function create(username: string, password: string): Promise<void> {
-    const existingUser = await redis.get("user:" + username);
+    const existingUser = await redis.hget("user:" + username, "password");
     if (existingUser) {
         throw new Error("Username already taken");
     }
