@@ -3,7 +3,9 @@ import { assertType, parseJson } from "../utils";
 import redis from "./redis";
 
 function isGame(game: any): game is Game {
-    if (game?.turn != undefined) return false;
+    if (game?.turn === undefined) {
+        return false;
+    }
     if (game?.board?.length <= 0) return false;
     return true;
 }
@@ -13,8 +15,8 @@ function assignToPlayer(username: string, gameId: string) {
 }
 
 function create(player1: string, player2: string, game: Game) {
-    const gameId = `game:${player1}:${player2}:${Date.now()}`;
-    redis.set(gameId, JSON.stringify(game));
+    const gameId = `${player1}:${player2}:${Date.now()}`;
+    redis.set("game:" + gameId, JSON.stringify(game));
     assignToPlayer(player1, gameId);
     assignToPlayer(player2, gameId);
 }
