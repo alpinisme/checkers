@@ -3,7 +3,7 @@ import express from "express";
 import session from "express-session";
 import store from "connect-redis";
 import redis from "./store/redis";
-import router from "./router";
+import router from "./routes";
 import { SessionConfig } from "../config/default";
 
 const RedisStore = store(session);
