@@ -11,7 +11,9 @@ const mockAuthUser: User = {
 
 const mockApp = express();
 
-mockApp.use(session({ secret: "hey" }));
+mockApp.use(
+    session({ secret: "hey", resave: false, saveUninitialized: false })
+);
 
 mockApp.all("*", function (req, res, next) {
     req.session.user = mockAuthUser;
