@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ValidationError from "../errors/ValidationError";
 import userStore from "../store/userStore";
-import { validateLogin, validateRegistration } from "../validations";
+import { validateLogin, validateRegistration } from "../middleware/validations";
 
 const authenticationRouter = Router();
 
