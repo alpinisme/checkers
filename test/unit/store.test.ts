@@ -65,6 +65,15 @@ describe("User store", () => {
         await expect(wrongPassWorks).resolves.toBe(false);
     });
 
+    test("A username can be multiple words with special characters", async () => {
+        const username = "Example - Crazy; &Pass";
+        const password = "Pass1234";
+        await userStore.create(username, password);
+        await expect(userStore.checkPassword(username, password)).resolves.toBe(
+            true
+        );
+    });
+
     test("Wins and losses can be recorded for a user", async () => {
         const username = "Example";
         const password = "Pass1234";
