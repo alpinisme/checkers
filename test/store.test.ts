@@ -1,6 +1,6 @@
-import gameStore from "../src/store/game";
-import userStore from "../src/store/user";
-import chatStore, { Message } from "../src/store/chat";
+import gameStore from "../src/store/gameStore";
+import userStore from "../src/store/userStore";
+import chatStore, { Message } from "../src/store/chatStore";
 import { Color } from "../src/models/board";
 import redis from "../src/store/redis";
 
