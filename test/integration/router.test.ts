@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../src/server";
-import redis from "../src/store/redis";
-import userStore from "../src/store/userStore";
+import app from "../../src/server";
+import redis from "../../src/store/redis";
+import userStore from "../../src/store/userStore";
 
 const request = supertest(app);
 

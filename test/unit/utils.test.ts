@@ -1,4 +1,4 @@
-import { replaceItemAtIndex } from "../src/utils";
+import { replaceItemAtIndex } from "../../src/utils";
 
 describe("replaceItemAtIndex", () => {
     test("Item at specified index should be replaced by given item", () => {

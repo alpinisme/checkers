@@ -1,8 +1,8 @@
-import gameStore from "../src/store/gameStore";
-import userStore from "../src/store/userStore";
-import chatStore, { Message } from "../src/store/chatStore";
-import { Color } from "../src/models/board";
-import redis from "../src/store/redis";
+import gameStore from "../../src/store/gameStore";
+import userStore from "../../src/store/userStore";
+import chatStore, { Message } from "../../src/store/chatStore";
+import { Color } from "../../src/models/board";
+import redis from "../../src/store/redis";
 
 jest.mock("ioredis", () => require("ioredis-mock/jest"));
 
