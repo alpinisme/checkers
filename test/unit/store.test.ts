@@ -12,7 +12,7 @@ describe("Game store", () => {
     test("A game can be saved and retrieved", async () => {
         const player1 = "alpha";
         const player2 = "omega";
-        const gameIdPrefix = "game:" + player1 + ":" + player2;
+        const gameIdPrefix = player1 + ":" + player2;
         gameStore.create(player1, player2, {
             turn: Color.Black,
             board: [],
