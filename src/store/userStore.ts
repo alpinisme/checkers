@@ -1,6 +1,7 @@
 import redis from "./redis";
 import bcrypt from "bcrypt";
 import { assertType, hasKeys } from "../utils";
+import ValidationError from "../errors/ValidationError";
 
 export interface User {
     username: string;
@@ -19,7 +20,7 @@ function isUser(user: any): user is User {
 async function create(username: string, password: string): Promise<void> {
     const existingUser = await redis.hget("user:" + username, "password");
     if (existingUser) {
-        throw new Error("Username already taken");
+        throw new ValidationError("username", "Username already taken");
     }
     const key = getKey(username);
     const encrypted = await bcrypt.hash(password, 10);
