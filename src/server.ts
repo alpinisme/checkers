@@ -3,11 +3,9 @@ import express from "express";
 import session from "express-session";
 import store from "connect-redis";
 import redis from "./store/redis";
-import { User } from "./store/userStore";
 import router from "./router";
-import { SessionConfig } from "./config/default";
+import { SessionConfig } from "../config/default";
 
-const port = 3000;
 const RedisStore = store(session);
 
 const app = express();
@@ -27,6 +25,4 @@ app.use(
 
 app.use(router);
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});
+export default app;
