@@ -1,26 +1,19 @@
 import { NextFunction, Request, Response } from "express";
+import gameStore from "../store/gameStore";
 
-export default function requireGameOwnership(
+export default async function requireGameOwnership(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    const gameId: string | undefined = req.params.gameId || req.body.gameId;
+    const gameId = req.params.gameId;
     const username = req.session.user?.username;
+    const isPlayer = await gameStore.hasPlayer(gameId, username);
 
-    if (!gameId) {
-        throw new Error("requireGameOwnership middleware requires gameId");
-    }
-    if (!username) {
-        throw new Error(
-            "requireGameOwnership middleware requires authenticated user"
-        );
-    }
-
-    const ownerIds = gameId.split(":");
-    if (!ownerIds.includes(username)) {
-        res.status(401).end();
+    if (!isPlayer) {
+        res.sendStatus(401);
     } else {
+        console.log("in next");
         next();
     }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { play } from "../models/play";
+import { play, TurnRequest } from "../models/play";
 import gameStore from "../store/gameStore";
 import { User } from "../models/user";
 import { GameError } from "../errors/GameError";
@@ -12,18 +12,18 @@ export default {
             const game = await gameStore.get(gameId);
             res.send(game);
         } catch (error) {
+            console.log(error);
             res.sendStatus(404);
         }
     },
 
     async update(req: Request, res: Response) {
         const gameId = req.params.gameId;
+        const user: User = req.session.user; // requireAuth middleware guarantees this cast
+        const request: TurnRequest = req.body;
 
-        const user = req.session.user as User; // requireAuth middleware guarantees this cast
         try {
-            const game = await gameStore.get(gameId);
-            const result = play(game, req.body);
-            gameStore.update(user.username, gameId, result);
+            gameService.update(user.username, gameId, request);
             res.sendStatus(200);
         } catch (err) {
             if (err instanceof GameError) {

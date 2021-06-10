@@ -15,8 +15,8 @@ describe("Game fetching", () => {
         const username = mockAuthUser.username;
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
-        gameStore.create(game);
-        const gameId = (await gameStore.allIdsBelongingTo(username))[0];
+        const gameId = gameStore.create(game);
+        gameStore.assignToPlayer(username, gameId);
         const response = await request.get("/game/" + gameId);
         expect(response.status).toBe(200);
         expect(response.body).toEqual(game);
@@ -27,7 +27,7 @@ describe("Game fetching", () => {
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
         const gameId = gameStore.create(game);
-        // const gameId = (await gameStore.allIdsBelongingTo(username))[0];
+        gameStore.assignToPlayer("Jacob", gameId);
         const response = await request.get("/game/" + gameId);
         expect(response.status).toBe(401);
     });
@@ -39,6 +39,7 @@ describe("Turn taking", () => {
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
         const gameId = gameStore.create(game);
+        gameStore.assignToPlayer(username, gameId);
         const turn = [
             [2, 1],
             [3, 2],
