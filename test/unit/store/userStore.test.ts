@@ -1,7 +1,5 @@
 import userStore from "../../../src/store/userStore";
-import chatStore from "../../../src/store/chatStore";
 import redis from "../../../src/store/redis";
-import { Message } from "../../../src/models/chat";
 
 jest.mock("ioredis", () => require("ioredis-mock/jest"));
 
@@ -38,37 +36,5 @@ describe("User store", () => {
         const user = await userStore.get(username);
         expect(user.wins).toBe(2);
         expect(user.losses).toBe(1);
-    });
-});
-
-describe("Chat store", () => {
-    test("Messages can be added and retrieved from a game's chat room", async () => {
-        expect.assertions(1);
-        const gameId = "example:game";
-        const msg: Message = {
-            username: "User",
-            message: "Hello World",
-            timestamp: Date.now(),
-        };
-        await chatStore.addMessage(gameId, msg);
-        await expect(chatStore.getChat(gameId)).resolves.toEqual([msg]);
-    });
-
-    test("Messages are retrieved from a game's chat room in reverse chronological order", async () => {
-        expect.assertions(1);
-        const gameId = "example:game";
-        const msg1: Message = {
-            username: "User",
-            message: "Hello World",
-            timestamp: Date.now(),
-        };
-        const msg2: Message = {
-            username: "World",
-            message: "And hello to you, too",
-            timestamp: Date.now(),
-        };
-        await chatStore.addMessage(gameId, msg1);
-        await chatStore.addMessage(gameId, msg2);
-        await expect(chatStore.getChat(gameId)).resolves.toEqual([msg2, msg1]);
     });
 });
