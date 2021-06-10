@@ -27,6 +27,9 @@ export function assertType<A>(
 }
 
 export function hasKeys(obj: Object, keyList: string[]) {
+    if (!obj?.hasOwnProperty) {
+        return false;
+    }
     return keyList.reduce((result, key) => {
         if (result == false) {
             return false;
