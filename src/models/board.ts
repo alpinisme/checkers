@@ -1,5 +1,7 @@
 /* type declarations */
 
+import { hasKeys } from "../utils";
+
 export type Position = [number, number];
 
 export enum PieceType {
@@ -18,6 +20,17 @@ export interface Piece {
 export type Board = Piece[];
 
 /* core module exports */
+
+function isPiece(piece: any): piece is Piece {
+    if (!hasKeys(piece, ["type", "color", "position"])) {
+        return false;
+    }
+    return piece.position.length == 2;
+}
+
+export function isBoard(board: any): board is Board {
+    return board.map ? board.map(isPiece) : false;
+}
 
 export function makePiece(
     color: Color,
