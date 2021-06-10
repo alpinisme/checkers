@@ -1,21 +1,16 @@
 import redis from "./redis";
 import bcrypt from "bcrypt";
-import { assertType, hasKeys } from "../utils";
+import { assertType } from "../utils";
 import ValidationError from "../errors/ValidationError";
+import { isUser, User } from "../models/user";
 
-export interface User {
-    username: string;
-    wins: number;
-    losses: number;
-}
+/* helper */
 
 function getKey(username: string) {
     return "user:" + username;
 }
 
-function isUser(user: any): user is User {
-    return hasKeys(user, ["username", "wins", "losses"]);
-}
+/* core module exports */
 
 async function create(username: string, password: string): Promise<void> {
     const existingUser = await redis.hget("user:" + username, "password");
@@ -40,11 +35,19 @@ async function get(username: string): Promise<User> {
     return assertType(user, isUser);
 }
 
+/**
+ * Increments the user's win count
+ * @param username
+ */
 function recordWin(username: string) {
     const key = getKey(username);
     redis.hincrby(key, "wins", 1);
 }
 
+/**
+ * Increments the user's loss count
+ * @param username
+ */
 function recordLoss(username: string) {
     const key = getKey(username);
     redis.hincrby(key, "losses", 1);

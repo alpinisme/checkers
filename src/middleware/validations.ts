@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { isBoard } from "../models/board";
 import { isPlayersTurn } from "../models/game";
-import { User } from "../store/userStore";
+import { User } from "../models/user";
 
 type ValidationErrors = Record<string, string>;
 

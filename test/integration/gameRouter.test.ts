@@ -2,7 +2,6 @@ import supertest from "supertest";
 import { makeNewGame } from "../../src/models/game";
 import gameStore from "../../src/store/gameStore";
 import redis from "../../src/store/redis";
-import userStore from "../../src/store/userStore";
 import { mockApp, mockAuthUser } from "./authenticatedMockApp";
 
 const request = supertest(mockApp);

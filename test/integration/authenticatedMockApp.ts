@@ -1,7 +1,7 @@
 import app from "../../src/server";
 import express from "express";
 import session from "express-session";
-import { User } from "../../src/store/userStore";
+import { User } from "../../src/models/user";
 
 const mockAuthUser: User = {
     username: "Joe Shmo",
