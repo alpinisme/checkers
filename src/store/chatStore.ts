@@ -1,15 +1,6 @@
-import { assertType, hasKeys, parseJson } from "../utils";
+import { isMessage, Message } from "../models/chat";
+import { assertType, parseJson } from "../utils";
 import redis from "./redis";
-
-export interface Message {
-    username: string;
-    message: string;
-    timestamp: number;
-}
-
-function isMessage(msg: any): msg is Message {
-    return hasKeys(msg, ["username", "message", "timestamp"]);
-}
 
 async function addMessage(gameId: string, message: Message) {
     const chatId = "chat:" + gameId;
