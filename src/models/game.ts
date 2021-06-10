@@ -9,12 +9,18 @@ export interface Game {
     activeColor: Color;
 }
 
-export function makeNewGame(player1: string, player2: string): Game {
+/**
+ * Initializes model of new game
+ * @param black username of black player
+ * @param red username of red player
+ * @returns a new game
+ */
+export function makeNewGame(black: string, red: string): Game {
     return {
         activeColor: Color.Black,
         board: makeNewBoard(),
-        black: player1,
-        red: player2,
+        black,
+        red,
     };
 }
 
