@@ -1,6 +1,5 @@
 import { Board, Color, getPiece, Piece, PieceType, Position } from "./board";
-
-import { TurnRequest } from "./game";
+import { TurnRequest } from "./play";
 
 /* type declarations */
 

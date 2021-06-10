@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { GameError, play } from "../models/game";
+import { play } from "../models/play";
 import gameStore from "../store/gameStore";
 import { User } from "../models/user";
+import { GameError } from "../errors/GameError";
 
 async function show(req: Request, res: Response) {
     const { gameId } = req.params;
