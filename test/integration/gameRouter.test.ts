@@ -45,7 +45,7 @@ describe("Turn taking", () => {
             [3, 2],
         ];
         const response = await request
-            .post("/game/" + gameId)
+            .put("/game/" + gameId)
             .send({ ...game, turn });
         expect(response.status).toBe(200);
     });
