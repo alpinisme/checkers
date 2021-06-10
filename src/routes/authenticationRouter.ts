@@ -34,4 +34,9 @@ authenticationRouter.post(
     }
 );
 
+authenticationRouter.post("/logout", (req, res) => {
+    delete req.session.user;
+    res.sendStatus(200);
+});
+
 export default authenticationRouter;
