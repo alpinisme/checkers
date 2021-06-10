@@ -36,4 +36,11 @@ describe("Chat store", () => {
         await chatStore.addMessage(gameId, msg2);
         await expect(chatStore.getChat(gameId)).resolves.toEqual([msg2, msg1]);
     });
+
+    test("A user can be verified to belong to a general (not game-specific) chat room", async () => {
+        const chatId = "blah";
+        const username = "Idk";
+        chatStore.addUser(chatId, username);
+        expect(await chatStore.isInRoom(chatId, username)).toBe(true);
+    });
 });
