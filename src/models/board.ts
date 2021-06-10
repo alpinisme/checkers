@@ -1,9 +1,19 @@
+import { hasKeys } from "../utils";
+import equal from "deep-equal";
+
+/*
+    Example board layout:
+    (0,0) (0,1) (0,2) (0,3)
+    (1,0) (1,1) (1,2) (1,3)
+    (2,0) (2,1) (2,2) (2,3)
+    (3,0) (3,1) (3,2) (3,3)
+
+    Black starts on the 0 side
+*/
+
 /* type declarations */
 
-import { hasKeys } from "../utils";
-
 export type Position = [number, number];
-
 export enum PieceType {
     Standard,
     King,
@@ -19,13 +29,22 @@ export interface Piece {
 }
 export type Board = Piece[];
 
-/* core module exports */
+/* helper */
 
 function isPiece(piece: any): piece is Piece {
     if (!hasKeys(piece, ["type", "color", "position"])) {
         return false;
     }
     return piece.position.length == 2;
+}
+
+/* core module exports */
+
+export function isOffBoard(position: Position) {
+    const y = position[0];
+    const x = position[1];
+    // board is 8 x 8, with 0-indexed positions
+    return y < 0 || y > 7 || x < 0 || x > 7;
 }
 
 export function isBoard(board: any): board is Board {
@@ -42,6 +61,10 @@ export function makePiece(
         type,
         position,
     };
+}
+
+export function getPiece(board: Board, position: Position): Piece | undefined {
+    return board.find((piece) => equal(piece.position, position));
 }
 
 export function makeNewBoard() {

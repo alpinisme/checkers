@@ -47,4 +47,14 @@ describe("game play", () => {
         };
         expect(() => play(storedGame, invalidRequest)).toThrow("Offboard Move");
     });
+
+    it("a player should not be able to move a piece belonging to the oponent", () => {
+        const invalidRequest: TurnRequest = {
+            ...validRequest,
+        };
+        const game: Game = { ...storedGame, activeColor: Color.Red }; // simulating red player attempting to move black
+        expect(() => play(game, invalidRequest)).toThrow(
+            "Illegal move: Cannot move opponent's piece"
+        );
+    });
 });

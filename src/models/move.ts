@@ -1,5 +1,6 @@
-import { Board, Color, Piece, PieceType, Position } from "./board";
-import equal from "deep-equal";
+import { Board, Color, getPiece, Piece, PieceType, Position } from "./board";
+
+import { TurnRequest } from "./game";
 
 /* type declarations */
 
@@ -15,16 +16,6 @@ export type AttemptFailure = {
 };
 export type AttemptResult = AttemptSuccess | AttemptFailure;
 type MoveType = "standard" | "capture" | "illegal";
-
-/*
-    Example board layout:
-    (0,0) (0,1) (0,2) (0,3)
-    (1,0) (1,1) (1,2) (1,3)
-    (2,0) (2,1) (2,2) (2,3)
-    (3,0) (3,1) (3,2) (3,3)
-
-    Black starts on the 0 side
-*/
 
 /* helper functions */
 
@@ -141,11 +132,12 @@ function attemptCapture(
 
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
 export function makeMove(
-    board: Board,
-    turn: Position[],
+    activeColor: Color,
+    request: TurnRequest,
     firstMove = true
 ): AttemptResult {
-    const [start, next, ...rest] = turn;
+    const board = request.board;
+    const [start, next, ...rest] = request.turn;
 
     // all moves complete, turn is over
     if (next == undefined) {
@@ -154,8 +146,8 @@ export function makeMove(
 
     // current move
     const move: Move = [start, next];
-    const activePiece = board.find((piece) => equal(piece.position, start));
-    const obstructingPiece = board.find((piece) => equal(piece.position, next));
+    const activePiece = getPiece(board, start);
+    const obstructingPiece = getPiece(board, next);
 
     if (activePiece == undefined) {
         return fail(
@@ -174,11 +166,15 @@ export function makeMove(
             return fail("Illegal move");
 
         case "capture":
-            const captureAttempt = attemptCapture(board, move, activePiece);
+            const attempt = attemptCapture(board, move, activePiece);
             const remainingTurn = [next, ...rest];
-            return captureAttempt.isSuccessful
-                ? makeMove(captureAttempt.result, remainingTurn, false) // multipe captures allowed, so try next move
-                : captureAttempt; // capture failed, return the error
+            return attempt.isSuccessful
+                ? makeMove(
+                      activeColor,
+                      { board: attempt.result, turn: remainingTurn },
+                      false
+                  ) // multipe captures allowed, so try next move
+                : attempt; // capture failed, return the error
 
         case "standard":
             return firstMove

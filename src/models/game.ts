@@ -1,4 +1,12 @@
-import { Board, Color, isBoard, makeNewBoard, Position } from "./board";
+import {
+    Board,
+    Color,
+    getPiece,
+    isBoard,
+    isOffBoard,
+    makeNewBoard,
+    Position,
+} from "./board";
 import { makeMove } from "./move";
 import equal from "deep-equal";
 
@@ -26,13 +34,6 @@ export class GameError extends Error {
 }
 
 /* helper functions */
-
-function isOffBoard(position: Position) {
-    const y = position[0];
-    const x = position[1];
-    // board is 8 x 8, with 0-indexed positions
-    return y < 0 || y > 7 || x < 0 || x > 7;
-}
 
 function hasOffBoardMoves(turn: Position[]) {
     return turn.some(isOffBoard);
@@ -64,8 +65,11 @@ export function play(game: Game, request: TurnRequest): Game {
     if (hasOffBoardMoves(request.turn)) {
         throw new GameError("Offboard Move");
     }
+    if (getPiece(request.board, request.turn[0])?.color != game.activeColor) {
+        throw new GameError("Illegal move: Cannot move opponent's piece");
+    }
 
-    const attempt = makeMove(request.board, request.turn);
+    const attempt = makeMove(game.activeColor, request);
 
     if (!attempt.isSuccessful) {
         throw new GameError(attempt.error);

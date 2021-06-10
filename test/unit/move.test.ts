@@ -25,7 +25,10 @@ describe("piece movement", () => {
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
-        const attempt = makeMove(boardStart, move) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result).toEqual(boardEnd);
@@ -42,7 +45,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe("Illegal move");
@@ -60,7 +66,10 @@ describe("piece movement", () => {
         const boardStart: Board = [piece, capturedPiece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
-        const attempt = makeMove(boardStart, move) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result.includes(capturedPiece)).toBe(false);
@@ -77,7 +86,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe("Illegal move: No piece exists to capture");
@@ -94,7 +106,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece, capturedPiece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe(
@@ -112,7 +127,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe("Illegal move");
@@ -128,7 +146,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(true);
     });
@@ -148,7 +169,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [piece, obstructingPiece];
 
-        const attempt = makeMove(boardStart, move) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe("Illegal move: Piece in the way");
@@ -167,7 +191,10 @@ describe("piece movement", () => {
             { ...piece, position: moveEnd, type: PieceType.King },
         ];
 
-        const attempt = makeMove(boardStart, move) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result).toEqual(boardEnd);
@@ -184,7 +211,10 @@ describe("piece movement", () => {
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
-        const attempt = makeMove(boardStart, move) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result).toEqual(boardEnd);
@@ -201,7 +231,10 @@ describe("piece movement", () => {
         const boardStart: Board = [piece];
         const boardEnd: Board = [{ ...piece, position: moveEnd }];
 
-        const attempt = makeMove(boardStart, move) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn: move,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result).toEqual(boardEnd);
@@ -224,7 +257,10 @@ describe("piece movement", () => {
         const boardStart: Board = [capturedPiece1, piece, capturedPiece2];
         const boardEnd: Board = [{ ...piece, position: position3 }];
 
-        const attempt = makeMove(boardStart, turn) as AttemptSuccess;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn,
+        }) as AttemptSuccess;
 
         expect(attempt.isSuccessful).toBe(true);
         expect(attempt.result).toEqual(boardEnd);
@@ -243,7 +279,10 @@ describe("piece movement", () => {
 
         const boardStart: Board = [capturedPiece1, piece];
 
-        const attempt = makeMove(boardStart, turn) as AttemptFailure;
+        const attempt = makeMove(piece.color, {
+            board: boardStart,
+            turn,
+        }) as AttemptFailure;
 
         expect(attempt.isSuccessful).toBe(false);
         expect(attempt.error).toBe(
