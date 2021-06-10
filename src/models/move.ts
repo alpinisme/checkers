@@ -129,7 +129,7 @@ function attemptCapture(
 
 /* core module export */
 
-// assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
+// concerns only piece movement, not who move is made by (whether correct turn or owning piece) or whether move is on board
 export function makeMove(
     activeColor: Color,
     request: TurnRequest,
