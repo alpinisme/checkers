@@ -1,4 +1,5 @@
 import { Board, Color, Piece, PieceType, Position } from "./board";
+import equal from "deep-equal";
 
 /* type declarations */
 
@@ -139,7 +140,7 @@ function attemptCapture(
 /* core module export */
 
 // assume that move starts at a valid position (with correct color piece) on the board and validate that before this point in program
-export function takeTurn(
+export function makeMove(
     board: Board,
     turn: Position[],
     firstMove = true
@@ -153,8 +154,8 @@ export function takeTurn(
 
     // current move
     const move: Move = [start, next];
-    const activePiece = board.find((piece) => piece.position == start);
-    const obstructingPiece = board.find((piece) => piece.position == next);
+    const activePiece = board.find((piece) => equal(piece.position, start));
+    const obstructingPiece = board.find((piece) => equal(piece.position, next));
 
     if (activePiece == undefined) {
         return fail(
@@ -176,7 +177,7 @@ export function takeTurn(
             const captureAttempt = attemptCapture(board, move, activePiece);
             const remainingTurn = [next, ...rest];
             return captureAttempt.isSuccessful
-                ? takeTurn(captureAttempt.result, remainingTurn, false) // multipe captures allowed, so try next move
+                ? makeMove(captureAttempt.result, remainingTurn, false) // multipe captures allowed, so try next move
                 : captureAttempt; // capture failed, return the error
 
         case "standard":

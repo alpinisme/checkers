@@ -1,23 +1,24 @@
-import { Board, Color, makeNewBoard, Position } from "./board";
-import { takeTurn } from "./move";
+import { Board, Color, isBoard, makeNewBoard, Position } from "./board";
+import { makeMove } from "./move";
 import equal from "deep-equal";
 
 /* type declarations */
 
 export interface Game {
-    turn: Color;
     board: Board;
+    black: string;
+    red: string;
+    activeColor: Color;
 }
 
 export interface TurnRequest {
-    color: Color;
     board: Board;
     turn: Position[];
 }
 
 /* error class */
 
-class GameError extends Error {
+export class GameError extends Error {
     constructor(message: string) {
         super(message);
         this.name = "GameError";
@@ -44,28 +45,61 @@ function isGameOver(board: Board) {
     );
 }
 
+function flipTurnColor(turn: Color) {
+    return turn == Color.Red ? Color.Black : Color.Red;
+}
+
 /* core module export */
 
-export function play(game: Game, request: TurnRequest) {
+/**
+ * @throws {GameError}
+ */
+export function play(game: Game, request: TurnRequest): Game {
     if (!equal(game.board, request.board)) {
         throw new GameError("Mismatched Boards");
     }
     if (isGameOver(request.board)) {
         throw new GameError("Game Over");
     }
-    if (game.turn != request.color) {
-        throw new GameError("Not Player's Turn");
-    }
     if (hasOffBoardMoves(request.turn)) {
         throw new GameError("Offboard Move");
     }
 
-    return takeTurn(request.board, request.turn);
+    const attempt = makeMove(request.board, request.turn);
+
+    if (!attempt.isSuccessful) {
+        throw new GameError(attempt.error);
+    }
+
+    return {
+        ...game,
+        board: attempt.result,
+        activeColor: flipTurnColor(game.activeColor),
+    };
 }
 
-export function makeNewGame(): Game {
+export function makeNewGame(player1: string, player2: string): Game {
     return {
-        turn: Color.Black,
+        activeColor: Color.Black,
         board: makeNewBoard(),
+        black: player1,
+        red: player2,
     };
+}
+
+export function isGame(game: any): game is Game {
+    const colors = [Color.Black, Color.Red];
+    if (!colors.includes(game?.activeColor)) {
+        return false;
+    }
+    if (!game.black || !game.red) {
+        return false;
+    }
+    return isBoard(game.board);
+}
+
+export function isPlayersTurn(game: Game, username: string) {
+    return game.activeColor == Color.Black
+        ? username == game.black
+        : username == game.red;
 }

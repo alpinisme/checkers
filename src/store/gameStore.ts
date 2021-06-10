@@ -1,24 +1,17 @@
-import { Game } from "../models/game";
+import { Game, isGame } from "../models/game";
 import { assertType, parseJson } from "../utils";
 import redis from "./redis";
-
-function isGame(game: any): game is Game {
-    if (game?.turn === undefined) {
-        return false;
-    }
-    if (game?.board?.length <= 0) return false;
-    return true;
-}
 
 function assignToPlayer(username: string, gameId: string) {
     redis.zadd(username + ":games", Date.now(), gameId);
 }
 
-function create(player1: string, player2: string, game: Game) {
-    const gameId = `${player1}:${player2}:${Date.now()}`;
+function create(game: Game) {
+    const gameId = `${game.black}:${game.red}:${Date.now()}`;
     redis.set("game:" + gameId, JSON.stringify(game));
-    assignToPlayer(player1, gameId);
-    assignToPlayer(player2, gameId);
+    assignToPlayer(game.black, gameId);
+    assignToPlayer(game.red, gameId);
+    return gameId;
 }
 
 async function get(gameId: string): Promise<Game> {

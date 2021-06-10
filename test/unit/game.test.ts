@@ -5,14 +5,15 @@ const blackPiece: Piece = makePiece(Color.Black, [1, 1], PieceType.King);
 const redPiece: Piece = makePiece(Color.Red, [3, 3], PieceType.King);
 
 const validRequest: TurnRequest = {
-    color: Color.Black,
     board: [blackPiece, redPiece],
     turn: [blackPiece.position, [2, 2]],
 };
 
 const storedGame: Game = {
     board: [blackPiece, redPiece],
-    turn: Color.Black,
+    activeColor: Color.Black,
+    black: "joe",
+    red: "peter",
 };
 
 describe("game play", () => {
@@ -37,16 +38,6 @@ describe("game play", () => {
             board,
         };
         expect(() => play(game, invalidRequest)).toThrow("Game Over");
-    });
-
-    test("a player should not be able to request move when not that player's turn", () => {
-        const invalidRequest: TurnRequest = {
-            ...validRequest,
-            color: Color.Red,
-        };
-        expect(() => play(storedGame, invalidRequest)).toThrow(
-            "Not Player's Turn"
-        );
     });
 
     test("a player should not be able to request move off board", () => {

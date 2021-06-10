@@ -3,6 +3,7 @@ import userStore from "../../src/store/userStore";
 import chatStore, { Message } from "../../src/store/chatStore";
 import { Color } from "../../src/models/board";
 import redis from "../../src/store/redis";
+import { makeNewGame } from "../../src/models/game";
 
 jest.mock("ioredis", () => require("ioredis-mock/jest"));
 
@@ -13,10 +14,7 @@ describe("Game store", () => {
         const player1 = "alpha";
         const player2 = "omega";
         const gameIdPrefix = player1 + ":" + player2;
-        gameStore.create(player1, player2, {
-            turn: Color.Black,
-            board: [],
-        });
+        gameStore.create(makeNewGame(player1, player2));
         const ids = await gameStore.allIdsBelongingTo(player1);
         const id = ids[0];
         expect(id.startsWith(gameIdPrefix)).toBe(true);
@@ -25,8 +23,8 @@ describe("Game store", () => {
     test("Updating a game should increase its score in the set of all the player's games (and only that player's)", async () => {
         const player1 = "alpha";
         const player2 = "omega";
-        const game = { turn: Color.Black, board: [] };
-        gameStore.create(player1, player2, game);
+        const game = makeNewGame(player1, player2);
+        gameStore.create(game);
         const initial = await gameStore.allIdsBelongingTo(player1);
         await new Promise((resolve) => setTimeout(() => resolve(true), 2));
         gameStore.update(player1, initial[0], game);
@@ -45,7 +43,7 @@ describe("Game store", () => {
         const player1 = "alpha";
         const player2 = "omega";
         const game: any = {};
-        gameStore.create(player1, player2, game);
+        gameStore.create(game);
         const ids = await gameStore.allIdsBelongingTo(player1);
 
         await expect(gameStore.get("game:" + ids[0])).rejects.toThrowError(
