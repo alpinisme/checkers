@@ -6,7 +6,7 @@ export default function requireAuth(
     next: NextFunction
 ) {
     if (!req.session.user) {
-        res.status(401).end();
+        res.sendStatus(401);
     }
     next();
 }
