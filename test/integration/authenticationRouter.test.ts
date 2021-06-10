@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../../src/server";
+import app from "../../src/app";
 import redis from "../../src/store/redis";
 import userStore from "../../src/store/userStore";
 

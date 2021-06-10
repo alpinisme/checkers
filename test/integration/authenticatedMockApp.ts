@@ -1,4 +1,4 @@
-import app from "../../src/server";
+import app from "../../src/app";
 import express from "express";
 import session from "express-session";
 import { User } from "../../src/models/user";
