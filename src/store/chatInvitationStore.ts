@@ -14,6 +14,6 @@ export default {
     },
 
     async all(username: string) {
-        redis.smembers(makeKey(username));
+        return redis.smembers(makeKey(username));
     },
 };
