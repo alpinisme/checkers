@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { play, TurnRequest } from "../models/play";
+import { TurnRequest } from "../models/play";
 import gameStore from "../store/gameStore";
 import { User } from "../models/user";
 import { GameError } from "../errors/GameError";
@@ -19,7 +19,7 @@ export default {
 
     async update(req: Request, res: Response) {
         const gameId = req.params.gameId;
-        const user: User = req.session.user; // requireAuth middleware guarantees this cast
+        const user: User = req.session.user;
         const request: TurnRequest = req.body;
 
         try {
