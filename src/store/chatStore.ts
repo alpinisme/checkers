@@ -11,6 +11,19 @@ function makeMembershipKey(postfix: string) {
 }
 
 export default {
+    /**
+     * Finds all ids of chat rooms that the specified user belongs to
+     * @param username
+     */
+    async index(username: string) {
+        return await redis.smembers(makeMembershipKey(username));
+    },
+
+    /**
+     * Adds a message to specified chat room (creating the room if it does not exist yet)
+     * @param id chat room id
+     * @param message Message object
+     */
     async addMessage(id: string, message: Message) {
         const key = makeRoomKey(id);
         const count = await redis.lpush(key, JSON.stringify(message));
@@ -19,6 +32,10 @@ export default {
         }
     },
 
+    /**
+     * Retrieves all messages in the specified chat room
+     * @param id chat room id
+     */
     async getChat(id: string): Promise<Message[]> {
         const key = makeRoomKey(id);
         const unparsed = await redis.lrange(key, 0, -1);
@@ -29,8 +46,8 @@ export default {
     },
 
     /**
-     * docblock example
-     * @param chatId
+     * Adds chat room to list of chats that the specified user is in
+     * @param chatId id of the room
      * @param username
      */
     addUser(chatId: string, username: string) {
