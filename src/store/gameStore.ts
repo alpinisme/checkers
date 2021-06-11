@@ -24,8 +24,6 @@ export default {
     },
 
     update(gameId: string, game: Game) {
-        // reassign to player so that the newly played game is first in player's sorted set
-
         redis.set(makeGameKey(gameId), JSON.stringify(game));
     },
 
