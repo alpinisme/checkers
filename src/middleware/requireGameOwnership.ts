@@ -13,7 +13,6 @@ export default async function requireGameOwnership(
     if (!isPlayer) {
         res.sendStatus(401);
     } else {
-        console.log("in next");
         next();
     }
 }
