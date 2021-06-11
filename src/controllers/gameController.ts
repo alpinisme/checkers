@@ -12,7 +12,6 @@ export default {
             const game = await gameStore.get(gameId);
             res.send(game);
         } catch (error) {
-            console.log(error);
             res.sendStatus(404);
         }
     },

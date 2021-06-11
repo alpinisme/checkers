@@ -39,7 +39,6 @@ export default {
 
     async hasPlayer(gameId: string, username: string) {
         const isMember = await redis.zscore(makeOwnershipKey(username), gameId);
-        console.log(username, gameId, isMember, isMember === null);
         return isMember !== null;
     },
 };
