@@ -6,7 +6,7 @@ export default function requireAuth(
     next: NextFunction
 ) {
     if (!req.session.user) {
-        res.sendStatus(401);
+        res.sendStatus(401); // TODO: should probably redirect to login instead
     }
     next();
 }
