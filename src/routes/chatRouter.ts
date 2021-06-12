@@ -13,4 +13,6 @@ chatRouter.get("/chat/:chatId", chatController.show);
 
 chatRouter.put("/chat/:chatId", chatController.update);
 
+chatRouter.get("/chat", chatController.index);
+
 export default chatRouter;

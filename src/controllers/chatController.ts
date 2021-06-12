@@ -4,8 +4,8 @@ import chatStore from "../store/chatStore";
 
 export default {
     async index(req: Request, res: Response) {
-        const { chatId } = req.params;
-        const chat = await chatStore.index(chatId);
+        const username = req.session.user.username;
+        const chat = await chatStore.index(username);
         res.send(chat);
     },
 
