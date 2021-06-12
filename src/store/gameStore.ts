@@ -28,11 +28,11 @@ export default {
     },
 
     assignToPlayer(username: string, gameId: string) {
-        redis.zadd(makeOwnershipKey(username), Date.now(), gameId);
+        return redis.zadd(makeOwnershipKey(username), Date.now(), gameId);
     },
 
     allIdsBelongingTo(username: string) {
-        return redis.zrange(makeOwnershipKey(username), 0, -1, "WITHSCORES");
+        return redis.zrange(makeOwnershipKey(username), 0, -1); // Add "WITHSCORES" as fourth arg to get timestamps
     },
 
     async hasPlayer(gameId: string, username: string) {
