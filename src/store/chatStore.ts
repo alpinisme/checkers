@@ -50,7 +50,7 @@ export default {
      * @param chatId id of the room
      * @param username
      */
-    addUser(chatId: string, username: string) {
+    addToRoom(chatId: string, username: string) {
         redis.sadd(makeMembershipKey(username), chatId);
     },
 

@@ -13,7 +13,7 @@ describe("Chat routes", () => {
     test("An authenticated user can add a message to a general chat room that they belong to", async () => {
         const username = mockAuthUser.username;
         const chatId = "inviter:819283";
-        chatStore.addUser(chatId, username);
+        chatStore.addToRoom(chatId, username);
         const response = await request
             .put("/chat/" + chatId)
             .send({ message: "Howdy!", timetamp: Date.now() });
@@ -37,7 +37,7 @@ describe("Chat routes", () => {
             "blahblah:127862375841",
             "ejifowe:23841234",
         ];
-        chatIds.forEach((id) => chatStore.addUser(id, username)); // TODO: rename addUser to addToRoom
+        chatIds.forEach((id) => chatStore.addToRoom(id, username));
         const response = await request.get("/chat/");
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(chatIds);

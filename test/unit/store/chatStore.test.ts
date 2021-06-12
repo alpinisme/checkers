@@ -40,7 +40,7 @@ describe("Chat store", () => {
     test("A user can be verified to belong to a general (not game-specific) chat room", async () => {
         const chatId = "blah";
         const username = "Idk";
-        chatStore.addUser(chatId, username);
+        chatStore.addToRoom(chatId, username);
         expect(await chatStore.isInRoom(chatId, username)).toBe(true);
     });
 });

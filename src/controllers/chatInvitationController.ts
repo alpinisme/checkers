@@ -14,7 +14,7 @@ export default {
         const { user } = req.session;
         const accepted: string = req.body.accepted;
         if (accepted) {
-            chatStore.addUser(chatId, user.username);
+            chatStore.addToRoom(chatId, user.username);
         }
         chatInvitationStore.destroy(chatId, user);
         res.sendStatus(200);
