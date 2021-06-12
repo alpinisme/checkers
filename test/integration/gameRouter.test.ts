@@ -16,7 +16,7 @@ describe("Game fetching", () => {
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
         const gameId = gameStore.create(game);
-        gameStore.assignToPlayer(username, gameId);
+        gameStore.assignToPlayer(gameId, username);
         const response = await request.get("/game/" + gameId);
         expect(response.status).toBe(200);
         expect(response.body).toEqual(game);
@@ -27,7 +27,7 @@ describe("Game fetching", () => {
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
         const gameId = gameStore.create(game);
-        gameStore.assignToPlayer("Jacob", gameId);
+        gameStore.assignToPlayer(gameId, otherUser);
         const response = await request.get("/game/" + gameId);
         expect(response.status).toBe(401);
     });
@@ -39,7 +39,7 @@ describe("Turn taking", () => {
         const otherUser = "Jacob";
         const game = makeNewGame(username, otherUser);
         const gameId = gameStore.create(game);
-        gameStore.assignToPlayer(username, gameId);
+        gameStore.assignToPlayer(gameId, username);
         const turn = [
             [2, 1],
             [3, 2],

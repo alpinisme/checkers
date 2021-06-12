@@ -47,7 +47,7 @@ describe("Chat routes", () => {
     test("An authenticated user can add a message to the chat of a game that they belong to", async () => {
         const username = mockAuthUser.username;
         const gameId = "inviter:819283";
-        gameStore.assignToPlayer(username, gameId);
+        gameStore.assignToPlayer(gameId, username);
         const response = await request
             .put("/chat/" + gameId)
             .send({ message: "Howdy!", timestamp: Date.now() });

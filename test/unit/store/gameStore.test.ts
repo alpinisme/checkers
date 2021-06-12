@@ -39,7 +39,7 @@ describe("Game store", () => {
         const player2 = "omega";
         const game = makeNewGame(player1, player2);
         const gameId = gameStore.create(game);
-        gameStore.assignToPlayer(player1, gameId);
+        gameStore.assignToPlayer(gameId, player1);
         const ids = await gameStore.allIdsBelongingTo(player1);
         expect(ids[0]).toEqual(gameId);
         expect(await gameStore.get(ids[0])).toEqual(game);
@@ -66,7 +66,7 @@ describe("Game store", () => {
         const player2 = "omega";
         const game = makeNewGame(player1, player2);
         const gameId = gameStore.create(game);
-        gameStore.assignToPlayer(player1, gameId);
+        gameStore.assignToPlayer(gameId, player1);
         const hasPlayer = await gameStore.hasPlayer(gameId, player1);
         expect(hasPlayer).toEqual(true);
     });

@@ -27,7 +27,7 @@ export default {
         redis.set(makeGameKey(gameId), JSON.stringify(game));
     },
 
-    assignToPlayer(username: string, gameId: string) {
+    assignToPlayer(gameId: string, username: string) {
         return redis.zadd(makeOwnershipKey(username), Date.now(), gameId);
     },
 
