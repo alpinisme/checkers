@@ -1,3 +1,4 @@
+import { exists } from "fs";
 import redis from "./redis";
 
 function makeKey(postfix: string) {
@@ -15,8 +16,12 @@ export default {
         redis.srem(makeKey(invitee), inviter);
     },
 
-    async all(username: string) {
-        return redis.smembers(makeKey(username));
+    async all(invitee: string) {
+        return redis.smembers(makeKey(invitee));
+    },
+
+    async exists(inviter: string, invitee: string) {
+        return redis.sismember(makeKey(invitee), inviter);
     },
 
     async createPublicInvite(inviter: string) {

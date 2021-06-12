@@ -1,13 +1,13 @@
 import { Router } from "express";
 import chatInvitationController from "../controllers/chatInvitationController";
 import requireAuth from "../middleware/requireAuth";
-import requireChatMembership from "../middleware/requireChatOwnership";
+import requireChatInvite from "../middleware/requireChatInvite";
 
 const chatInvitationRouter = Router();
 
 chatInvitationRouter.use(requireAuth);
 
-chatInvitationRouter.use("/chat-invite/:chatId", requireChatMembership);
+chatInvitationRouter.use("/chat-invite/:chatId", requireChatInvite);
 
 chatInvitationRouter.get("/chat-invite", chatInvitationController.index);
 
