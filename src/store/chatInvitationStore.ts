@@ -5,12 +5,12 @@ function makeKey(postfix: string) {
 }
 
 export default {
-    async create(inviter: string, invitee: string) {
-        redis.sadd(makeKey(invitee), inviter);
+    async create(chatId: string, invitee: string) {
+        redis.sadd(makeKey(invitee), chatId);
     },
 
-    async destroy(inviter: string, invitee: string) {
-        redis.srem(makeKey(invitee), inviter);
+    async destroy(chatId: string, invitee: string) {
+        redis.srem(makeKey(invitee), chatId);
     },
 
     async all(username: string) {
