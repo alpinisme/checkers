@@ -53,4 +53,26 @@ describe("Chat routes", () => {
             .send({ message: "Howdy!", timestamp: Date.now() });
         expect(response.statusCode).toBe(200);
     });
+
+    test("An authenticated user cannot add a message to the chat of a game that they don't belong to", async () => {
+        const username = mockAuthUser.username;
+        const gameId = "inviter:819283";
+        const response = await request
+            .put("/chat/" + gameId)
+            .send({ message: "Howdy!", timestamp: Date.now() });
+        expect(response.statusCode).toBe(401);
+    });
+
+    test("An authenticated user can view all messages in a chat room they belong to in reverse chronological order", async () => {
+        const username = mockAuthUser.username;
+        const gameId = "inviter:819283";
+        gameStore.assignToPlayer(gameId, username);
+        const msg1 = { username, message: "Howdy!", timestamp: Date.now() };
+        const msg2 = { ...msg1, message: "Right back at ya!" };
+        chatStore.addMessage(gameId, msg1);
+        chatStore.addMessage(gameId, msg2);
+        const response = await request.get("/chat/" + gameId);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual([msg2, msg1]);
+    });
 });
